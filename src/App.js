@@ -1,24 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/home";
+import About from "./pages/about";
+import Contact from "./pages/contact";
+import Work from "./pages/work";
+import Nav from "./components/nav";
+import { Container } from "@mui/material";
+import Iframe from "./pages/iframe";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Container maxWidth="xl">
+        {/* <Nav /> */}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/About" element={<About />} />
+          <Route path="/Work" element={<Work />} />
+          <Route path="/Contact" element={<Contact />} />
+          <Route path="/iframe" element={<Iframe />} />
+        </Routes>
+      </Container>
+    </>
   );
 }
 
