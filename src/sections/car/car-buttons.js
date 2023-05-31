@@ -35,6 +35,7 @@ import CancelIcon from "../../components/icon/cancel-icon";
 import WarrantyIcon from "../../components/icon/warranty-icon";
 import OverviewIcon from "../../components/icon/overview-icon";
 import Dialog from "../../components/dialog/dialog";
+import BasicList from "../../components/list/list";
 
 const RightRoot = styled("div")(({}) => ({
   top: "8rem",
@@ -232,13 +233,26 @@ const CarButtons = ({ value, handleTabChange }) => {
     </>
   );
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const show = Boolean(anchorEl);
+  const [x, setX] = useState("");
+  const [y, setY] = useState("");
+
+  const show = Boolean(x);
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+    const { clientX, clientY } = event;
+    console.log(event);
+    if (x) {
+      setY(null);
+      setX(null);
+    } else {
+      setX(clientX);
+      setY(clientY);
+      console.log(event);
+    }
   };
+
   const handleCloseMenu = () => {
-    setAnchorEl(null);
+    setX(null);
+    setY(null);
   };
 
   const carTab = (
@@ -298,9 +312,14 @@ const CarButtons = ({ value, handleTabChange }) => {
       {(carTabIndex === 0 || carTabIndex === 3) && rightButtons}
       {carTab}
       {/* <Dialog open={oprnDialog} setOpen={(data) => setOpneDialog(data)} /> */}
-      <Menu
+      {x && y && (
+        <Box sx={{ position: "absolute", left: x, top: y }}>
+          <BasicList />
+        </Box>
+      )}
+      {/* <Menu
         id="basic-menu"
-        anchorEl={anchorEl}
+        sx={{ position: "absolute", left: "100px", top: "100px" }}
         open={show}
         onClose={handleCloseMenu}
         MenuListProps={{
@@ -318,7 +337,7 @@ const CarButtons = ({ value, handleTabChange }) => {
           See Back Seat
         </MenuItem>
         <MenuItem onClick={handleCloseMenu}>See Center Console</MenuItem>
-      </Menu>
+      </Menu> */}
     </>
   );
 };

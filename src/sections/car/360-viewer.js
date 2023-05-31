@@ -872,7 +872,7 @@ class React360Viewer extends Component {
             ></div>
             <HotspotCard
               onClick={() => this.handleClick(false)}
-              opacity={this.showHotSpotCard ? 1 : 0}
+              opacity={this.showHotSpotCard ? "flex" : "none"}
             />
           </>
         )}
