@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pannellum } from "pannellum-react";
 
 import { useSelector } from "react-redux";
 import HotspotDetail from "./hotspot-detail";
 
 function Interior360() {
-  const { interiorCarStatus } = useSelector((state) => state.car);
+  const { interiorCarStatus, isHotspot } = useSelector((state) => state.car);
   const src = `/images/${interiorCarStatus}.jpg`;
 
   const [showTooltip, setShowTooltip] = useState(false);
@@ -26,9 +26,9 @@ function Interior360() {
     const imageDiv = document.createElement("img");
     imageDiv.setAttribute("width", "45");
     imageDiv.setAttribute("height", "45");
+    imageDiv.classList.add("pirelly-custom-tooltip");
     imageDiv.setAttribute("src", "hotspot-point.svg"); // https://img.icons8.com/ios/1600/circled-up-filled.png
     hotSpotDiv.appendChild(imageDiv);
-    console.log(hotSpotDiv);
   };
 
   // const click = () => {
@@ -65,6 +65,25 @@ function Interior360() {
     setShowTooltip(false);
   };
 
+  // const element = document.getElementsByClassName("pnlm-render-container")[0];
+  const element = document.querySelector(".pnlm-container");
+  // element?.remove()
+  console.log(element);
+  useEffect(() => {
+    if (isHotspot)
+      document
+        .querySelectorAll(".pirelly-custom-tooltip")
+        .forEach(function (e) {
+          e.style.visibility = "visible";
+        });
+    else
+      document
+        .querySelectorAll(".pirelly-custom-tooltip")
+        .forEach(function (e) {
+          e.style.visibility = "hidden";
+        });
+  }, [isHotspot]);
+
   return (
     <>
       <Pannellum
@@ -80,14 +99,25 @@ function Interior360() {
         compass={true}
         showZoomCtrl={false}
         mouseZoom={false}
+        showFullscreenCtrl={false}
         onLoad={() => {
           console.log("panorama loaded");
         }}
+        hotspotDebug={false}
       >
         <Pannellum.Hotspot
           type="custom"
           pitch={-10}
           yaw={-120}
+          handleClick={(evt, name) => handleClick(evt, name)}
+          cssClass="custom-hotspot"
+          tooltip={hotspot}
+          createTooltipArgs="Baltimore Museum of Art"
+        />
+        <Pannellum.Hotspot
+          type="custom"
+          pitch={-100}
+          yaw={120}
           handleClick={(evt, name) => handleClick(evt, name)}
           cssClass="custom-hotspot"
           tooltip={hotspot}

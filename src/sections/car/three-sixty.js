@@ -1,4 +1,3 @@
-import { Box, IconButton, Tooltip } from "@mui/material";
 import React360Viewer from "./360-viewer";
 import { useSelector } from "react-redux";
 import { useRef } from "react";

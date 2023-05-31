@@ -30,6 +30,7 @@ export default function HotspotDetail({ open, handleClose }) {
         }}
       >
         <Fab
+          color={"secondary"}
           icon={<CloseIcon className="D" />}
           onClick={() => {
             setStatus(1);
@@ -42,7 +43,6 @@ export default function HotspotDetail({ open, handleClose }) {
             color: "white",
           }}
         />
-
         {status === 1 ? (
           <>
             <Button

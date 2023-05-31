@@ -48,13 +48,9 @@ const RightRoot = styled("div")(({}) => ({
 const topStyle = {
   width: "30rem",
   opacity: 0.9,
-  bgcolor: "#1E1E1E",
   position: "fixed",
   top: 10,
   borderRadius: 1,
-  ".css-2he6n-MuiButtonBase-root-MuiTab-root.Mui-selected": {
-    color: "white !important",
-  },
   ".css-1wf8b0h-MuiTabs-flexContainer": {
     justifyContent: "space-around",
   },
@@ -63,20 +59,12 @@ const topStyle = {
 const bottomStyle = {
   width: "30rem",
   opacity: 0.9,
-  bgcolor: "#B0CDFF",
   position: "fixed",
   bottom: 10,
   borderRadius: 1,
-  ".css-2he6n-MuiButtonBase-root-MuiTab-root.Mui-selected": {
-    color: "#1862E3",
-  },
   ".css-1wf8b0h-MuiTabs-flexContainer": {
     justifyContent: "space-around",
   },
-  ".css-2he6n-MuiButtonBase-root-MuiTab-root+.css-2he6n-MuiButtonBase-root-MuiTab-root":
-    {
-      color: "#5794FF",
-    },
 };
 
 const interior = {
@@ -186,6 +174,7 @@ const CarButtons = ({ value, handleTabChange }) => {
       </Box>
       <RightRoot>
         <Fab
+          color={"primary"}
           icon={
             checked ? (
               <ExpandMoreRoundedIcon color="secondary" />
@@ -199,6 +188,7 @@ const CarButtons = ({ value, handleTabChange }) => {
           <Box>
             <Box display={"block"} mb={1}>
               <Fab
+                color={"primary"}
                 icon={<WarrantyIcon color="secondary" />}
                 onClick={handleChange}
               />
@@ -213,6 +203,7 @@ const CarButtons = ({ value, handleTabChange }) => {
             </Box>
             <Box display={"block"} mb={1}>
               <Fab
+                color={"primary"}
                 icon={<OverviewIcon color="secondary" />}
                 onClick={handleChange}
               />
@@ -240,6 +231,8 @@ const CarButtons = ({ value, handleTabChange }) => {
     setAnchorEl(null);
   };
 
+  console.log(value);
+
   const carTab = (
     <Box sx={carTabIndex === 1 ? topStyle : bottomStyle}>
       <Tabs
@@ -247,13 +240,17 @@ const CarButtons = ({ value, handleTabChange }) => {
         onChange={handleTabChange}
         centered
         sx={{
+          background: "#1E1E1E",
           ".MuiTabs-flexContainer": {
             display: "flex",
             justifyContent: "space-around",
           },
         }}
       >
-        <Tab label="Exterior" />
+        <Tab
+          label="Exterior"
+          sx={{ color: value === 0 ? "white !important" : "gray" }}
+        />
         <Tab
           label="Interior"
           icon={
@@ -265,9 +262,16 @@ const CarButtons = ({ value, handleTabChange }) => {
           }
           iconPosition="end"
           onClick={handleClick}
+          sx={{ color: value === 1 ? "white !important" : "gray" }}
         />
-        <Tab label="Gallery" />
-        <Tab label="Walk Around" />
+        <Tab
+          label="Gallery"
+          sx={{ color: value === 2 ? "white !important" : "gray " }}
+        />
+        <Tab
+          label="Walk Around"
+          sx={{ color: value === 3 ? "white !important" : "gray " }}
+        />
       </Tabs>
     </Box>
   );
@@ -283,7 +287,7 @@ const CarButtons = ({ value, handleTabChange }) => {
   return (
     <>
       {leftButtons}
-      {carTabIndex !== 2 && rightButtons}
+      {(carTabIndex === 0 || carTabIndex === 3) && rightButtons}
       {carTab}
       <Menu
         id="basic-menu"

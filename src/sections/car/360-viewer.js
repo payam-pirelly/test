@@ -838,28 +838,29 @@ class React360Viewer extends Component {
         </Hammer>
         <LeftButtons>
           <Fab
+            color={"primary"}
             icon={<AddRoundedIcon color="secondary" />}
             onClick={this.zoomIn}
             disabled={this.currentScale > 2 ? true : false}
           />
           <Fab
+            color={"primary"}
             icon={<RemoveRoundedIcon color="secondary" />}
             onClick={this.zoomOut}
             disabled={this.currentScale === 1 ? true : false}
           />
         </LeftButtons>
-        <LineTo
+        {/* <LineTo
           from="A"
           to="B"
           borderColor={"#1862E3"}
-          // borderStyle={"dashed"}
           delay={10}
-        />
+        /> */}
         {this.showHotSpotCard && (
           <>
-            {/* <div
+            <div
               style={{
-                borderTop: "1px dashed rgb(24, 98, 227)",
+                borderTop: "1px solid rgb(24, 98, 227)",
                 position: "absolute",
                 top: "519.734px",
                 left: "721.5px",
@@ -868,7 +869,7 @@ class React360Viewer extends Component {
                 transform: "rotate(-136.846deg)",
                 transformOrigin: "0px 0px",
               }}
-            ></div> */}
+            ></div>
             <HotspotCard
               onClick={() => this.handleClick(false)}
               opacity={this.showHotSpotCard ? 1 : 0}

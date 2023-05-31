@@ -11,7 +11,7 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 export default function HotSpotCardDetail({ onClose }) {
   const ref = React.useRef();
-  console.log(ref)
+  console.log(ref);
 
   const card = (
     <React.Fragment>
@@ -39,9 +39,9 @@ export default function HotSpotCardDetail({ onClose }) {
         alignItems={"center"}
         justifyContent={"center"}
       >
-        <Fab icon={<ArrowLeftIcon />} />
+        <Fab icon={<ArrowLeftIcon />} color={"secondary"} />
         <Box marginX={1}>2/11</Box>
-        <Fab icon={<ArrowRightIcon />} />
+        <Fab icon={<ArrowRightIcon />} color={"secondary"} />
       </Box>
     </React.Fragment>
   );
