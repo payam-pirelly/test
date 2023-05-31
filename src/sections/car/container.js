@@ -15,7 +15,7 @@ export default function Container() {
 
   const handleOnClick = () => {
     var fullscreenId = document.getElementById("fullscreen");
-    // enterFullScreen(fullscreenId);
+    enterFullScreen(fullscreenId);
     dispatch(toggledFullScreen(true));
   };
 

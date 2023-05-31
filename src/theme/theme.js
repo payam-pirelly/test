@@ -7,16 +7,16 @@ const theme = createTheme({
     primary: {
       lightest: "#F5F7FF",
       light: "#EBEEFE",
-      main: "#EAF1FD",
-      dark: "#EAF1FD", //hover
+      main: "#E1F0FF",
+      dark: "#E1F0FF", //hover
       darkest: "#312E81",
       contrastText: "#FFFFFF",
     },
     secondary: {
       lightest: "#F5F7FF",
       light: "#EBEEFE",
-      main: "#07A4FC",
-      dark: "#07A4FC", //hover
+      main: "#1862E3",
+      dark: "#1862E3", //hover
       darkest: "#312E81",
       contrastText: "#FFFFFF",
     },

@@ -13,7 +13,7 @@ function App() {
       <Container maxWidth="xl">
         {/* <Nav /> */}
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Iframe />} />
           <Route path="/About" element={<About />} />
           <Route path="/Work" element={<Work />} />
           <Route path="/Contact" element={<Contact />} />

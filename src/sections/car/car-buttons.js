@@ -34,6 +34,7 @@ import IconLabelButton from "../../components/button/Icon-label-button";
 import CancelIcon from "../../components/icon/cancel-icon";
 import WarrantyIcon from "../../components/icon/warranty-icon";
 import OverviewIcon from "../../components/icon/overview-icon";
+import Dialog from "../../components/dialog/dialog";
 
 const RightRoot = styled("div")(({}) => ({
   top: "8rem",
@@ -85,6 +86,7 @@ const CarButtons = ({ value, handleTabChange }) => {
   const { carTabIndex } = useSelector((state) => state.car);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const [oprnDialog, setOpneDialog] = useState(false);
 
   const handleChange = () => {
     setChecked((prev) => !prev);
@@ -108,9 +110,11 @@ const CarButtons = ({ value, handleTabChange }) => {
                 display: "flex",
                 borderRadius: 10,
                 height: "2rem",
+                width: "10rem",
                 alignItems: "center",
-                background: "gray",
+                background: (theme) => theme.palette.primary.main,
                 opacity: 0.9,
+                justifyContent: "space-around",
               }}
             >
               <HotspotIcon
@@ -138,7 +142,9 @@ const CarButtons = ({ value, handleTabChange }) => {
                   opacity: 0.9,
                   display: "flex",
                   alignItems: "center",
-                  background: open ? "#0085FF" : "",
+                  background: open
+                    ? (theme) => theme.palette.primary.main
+                    : "transparent",
                   borderRadius: 10,
                   height: "2rem",
                   marginTop: 1,
@@ -147,7 +153,11 @@ const CarButtons = ({ value, handleTabChange }) => {
               >
                 <IconLabelButton icon={<InfoOutlinedIcon />} title="info" />
                 {open && (
-                  <Typography color={theme.palette.secondary.main} mr={1}>
+                  <Typography
+                    sx={{ fontWeight: "bold" }}
+                    color={theme.palette.secondary.main}
+                    mr={1}
+                  >
                     2018 ford
                   </Typography>
                 )}
@@ -231,8 +241,6 @@ const CarButtons = ({ value, handleTabChange }) => {
     setAnchorEl(null);
   };
 
-  console.log(value);
-
   const carTab = (
     <Box sx={carTabIndex === 1 ? topStyle : bottomStyle}>
       <Tabs
@@ -289,6 +297,7 @@ const CarButtons = ({ value, handleTabChange }) => {
       {leftButtons}
       {(carTabIndex === 0 || carTabIndex === 3) && rightButtons}
       {carTab}
+      {/* <Dialog open={oprnDialog} setOpen={(data) => setOpneDialog(data)} /> */}
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
