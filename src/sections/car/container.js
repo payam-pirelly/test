@@ -7,6 +7,7 @@ import Main from "./main";
 import CarOut from "./car-out";
 import { toggledFullScreen } from "../../redux/car-slice";
 import ShowWindowDimensions from "../../utils/resize";
+import { enterFullScreen } from "../../utils/fullscreen";
 
 export default function Container() {
   const { carStatus } = useSelector((state) => state.car);
@@ -14,7 +15,7 @@ export default function Container() {
 
   const handleOnClick = () => {
     var fullscreenId = document.getElementById("fullscreen");
-    // enterFullScreen(fullscreenId);
+    enterFullScreen(fullscreenId);
     dispatch(toggledFullScreen(true));
   };
 
@@ -43,7 +44,7 @@ export default function Container() {
           flexGrow: 1,
         }}
       >
-        <MUIContainer maxWidth={"100%"} sx={{ height: "100%" }}>
+        <MUIContainer maxWidth={"100%"} sx={{ height: "100%", width: "100%" }}>
           <Grid
             container
             sx={{ flex: "1 1 auto", height: "100%" }}
