@@ -81,6 +81,8 @@ class React360Viewer extends Component {
     this.currentScale = 1;
     this.x = 0;
     this.y = 0;
+    this.previousX = 0;
+    this.previousY = 0;
 
     this.state = {
       lastX: 0,
@@ -115,6 +117,8 @@ class React360Viewer extends Component {
       showHotSpotCard: false,
       x: 0,
       y: 0,
+      previousX: 0,
+      previousY: 0,
     };
 
     //this.currentLeftPosition = this.currentLeftPosition.bind(this)
@@ -570,10 +574,10 @@ class React360Viewer extends Component {
 
   zoom(zoom) {
     this.setState({ currentScale: (this.currentScale += zoom) });
-    // //console.log(this.lastX + ' - ' + this.lastY)
-    // // let factor = Math.pow(1.01, clicks);
-    // let factor = Math.pow(1.1, clicks);
-    // //console.log(factor)
+    //console.log(this.lastX + ' - ' + this.lastY)
+    // let factor = Math.pow(1.01, clicks);
+    // let factor = Math.pow(1.1, zoom);
+    //console.log(factor)
     // if (factor > 1) {
     //   this.currentScale += factor;
     //   console.log("1", factor);
@@ -649,7 +653,45 @@ class React360Viewer extends Component {
   };
 
   doMoving = (evt) => {
-    if (this.currentScale > 1) return;
+    if (this.currentScale > 1) {
+      const { clientX, clientY } = evt;
+      let xValue = 0,
+        yValue = 0;
+      if (clientX > this.state.previousX && clientY > this.state.previousY) {
+        xValue = 1;
+        yValue = 1;
+      } else if (
+        clientX < this.state.previousX &&
+        clientY < this.state.previousY
+      ) {
+        xValue = -1;
+        yValue = -1;
+      } else if (
+        clientX < this.state.previousX &&
+        clientY > this.state.previousY
+      ) {
+        xValue = -1;
+        yValue = 1;
+      } else if (
+        clientX > this.state.previousX &&
+        clientY < this.state.previousY
+      ) {
+        xValue = 1;
+        yValue = -1;
+      }
+      console.log("yValue", yValue);
+      console.log("xValue", xValue);
+
+      if (this.movement) {
+        this.state.previousX = clientX;
+        this.state.previousY = clientY;
+        this.state.x = this.state.x + xValue;
+        this.state.y = this.state.y + yValue;
+        this.setState({ ...this.state });
+      }
+
+      return;
+    }
     if (this.movement) {
       this.onMove(evt.clientX);
     }

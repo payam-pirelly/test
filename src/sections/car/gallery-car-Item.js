@@ -1,5 +1,13 @@
 import * as React from "react";
-import { Avatar, Backdrop, Card, CardHeader, CardMedia, Fab, IconButton } from "@mui/material";
+import {
+  Avatar,
+  Backdrop,
+  Card,
+  CardHeader,
+  CardMedia,
+  Fab,
+  IconButton,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
@@ -18,8 +26,6 @@ export default function GalleryCarItem({ open, onClose }) {
     value += num;
     dispatch(toggledCarIndex(value));
   };
-
-  console.log(carIndex);
 
   const image = useMemo(
     () => (
@@ -49,10 +55,11 @@ export default function GalleryCarItem({ open, onClose }) {
 
   const src = `images/${carIndex}.jpg`;
 
-  console.log(src);
-
   return (
-    <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={open}>
+    <Backdrop
+      sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      open={open}
+    >
       <IconButton
         edge="end"
         sx={{ position: "absolute", top: "50%", left: 10, color: "white" }}

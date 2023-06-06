@@ -3,14 +3,18 @@ import {
   Typography,
   Box,
   Fade,
-  Tabs,
+  Tabs as MuiTabs,
   Tab,
   Switch,
   useTheme,
-  Menu,
-  MenuItem,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Divider,
 } from "@mui/material";
-import React from "react";
+
+import React, { useRef } from "react";
 import { styled } from "@mui/material/styles";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -35,39 +39,29 @@ import CancelIcon from "../../components/icon/cancel-icon";
 import WarrantyIcon from "../../components/icon/warranty-icon";
 import OverviewIcon from "../../components/icon/overview-icon";
 import Dialog from "../../components/dialog/dialog";
-import BasicList from "../../components/list/list";
 
-const RightRoot = styled("div")(({}) => ({
+const RightButtons = styled("div")(({}) => ({
   top: "8rem",
   display: "flex",
   flexDirection: "column",
   position: "absolute",
   right: "2rem",
-  height: "20%",
   justifyContent: "space-around",
 }));
 
-const topStyle = {
-  width: "30rem",
+const Tabs = styled(MuiTabs)(({ theme }) => ({
+  background: theme.palette.primary.darkest,
+  ".MuiTabs-flexContainer": {
+    display: "flex",
+    justifyContent: "space-around",
+  },
   opacity: 0.9,
   position: "fixed",
-  top: 10,
-  borderRadius: 1,
+  borderRadius: theme.spacing(1),
   ".css-1wf8b0h-MuiTabs-flexContainer": {
     justifyContent: "space-around",
   },
-};
-
-const bottomStyle = {
-  width: "30rem",
-  opacity: 0.9,
-  position: "fixed",
-  bottom: 10,
-  borderRadius: 1,
-  ".css-1wf8b0h-MuiTabs-flexContainer": {
-    justifyContent: "space-around",
-  },
-};
+}));
 
 const interior = {
   bottom: "2rem",
@@ -87,87 +81,108 @@ const CarButtons = ({ value, handleTabChange }) => {
   const { carTabIndex } = useSelector((state) => state.car);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [oprnDialog, setOpneDialog] = useState(false);
+  const [openDialog, setOpneDialog] = useState(false);
+  const [show, setShow] = useState(false);
+  const ref = useRef();
+  const offsetLeft = ref?.current?.offsetLeft;
 
   const handleChange = () => {
     setChecked((prev) => !prev);
   };
+
   const handleClose = () => {
     dispatch(toggledCarStatus("main"));
     exitFullscreen();
   };
 
+  const handleClick = () => {
+    if (show) {
+      setShow(false);
+      return;
+    } else setShow(true);
+  };
+
+  const handleCloseMenu = () => {
+    setShow(false);
+  };
+
+  const handleMenu = (data) => {
+    dispatch(toggledEnteriorCarStatus(undefined));
+    setTimeout(() => {
+      dispatch(toggledEnteriorCarStatus(data));
+    }, 100);
+    handleCloseMenu();
+  };
+
   const leftButtons = (
-    <>
-      <Box sx={carTabIndex === 1 ? interior : exterior}>
-        {carTabIndex === 2 ? (
-          <IconButton onClick={() => dispatch(toggledCarTabIndex(0))}>
-            <ArrowBackRoundedIcon fontSize="large" />
-          </IconButton>
-        ) : (
-          <>
-            <Box
-              sx={{
-                display: "flex",
-                borderRadius: 10,
-                height: "2rem",
-                width: "10rem",
-                alignItems: "center",
-                background: (theme) => theme.palette.primary.main,
-                opacity: 0.9,
-                justifyContent: "space-around",
+    <Box sx={carTabIndex === 1 ? interior : exterior}>
+      {carTabIndex === 2 ? (
+        <IconButton onClick={() => dispatch(toggledCarTabIndex(0))}>
+          <ArrowBackRoundedIcon fontSize="large" />
+        </IconButton>
+      ) : (
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              borderRadius: (theme) => theme.spacing(1),
+              height: "2rem",
+              width: "10rem",
+              alignItems: "center",
+              background: (theme) => theme.palette.primary.main,
+              opacity: 0.9,
+              justifyContent: "space-around",
+            }}
+          >
+            <HotspotIcon
+              style={{
+                margin: "0 6px",
+                fontSize: "small",
+                fill: "red",
               }}
+            />
+            <Typography color={theme.palette.secondary.main}>
+              Hotspot
+            </Typography>
+            <Switch
+              size="small"
+              color="secondary"
+              onChange={() => dispatch(toggledIsHotspot())}
+            />
+          </Box>
+          {carTabIndex !== 1 && (
+            <Box
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
+              component={"div"}
+              sx={{
+                opacity: 0.9,
+                display: "flex",
+                alignItems: "center",
+                background: open
+                  ? (theme) => theme.palette.primary.main
+                  : "transparent",
+                borderRadius: (theme) => theme.spacing(1),
+                height: "2rem",
+                marginTop: 1,
+              }}
+              onMouseOut={() => setOpen(false)}
             >
-              <HotspotIcon
-                style={{
-                  margin: "0 6px",
-                  fontSize: "small",
-                  fill: "red",
-                }}
-              />
-              <Typography color={theme.palette.secondary.main}>
-                Hotspot
-              </Typography>
-              <Switch
-                size="small"
-                color="secondary"
-                onChange={() => dispatch(toggledIsHotspot())}
-              />
+              <IconLabelButton icon={<InfoOutlinedIcon />} title="info" />
+              {open && (
+                <Typography
+                  sx={{ fontWeight: "bold" }}
+                  color={theme.palette.secondary.main}
+                  mr={1}
+                >
+                  2018 ford
+                </Typography>
+              )}
             </Box>
-            {carTabIndex !== 1 && (
-              <Box
-                onMouseEnter={() => setOpen(true)}
-                onMouseLeave={() => setOpen(false)}
-                component={"div"}
-                sx={{
-                  opacity: 0.9,
-                  display: "flex",
-                  alignItems: "center",
-                  background: open
-                    ? (theme) => theme.palette.primary.main
-                    : "transparent",
-                  borderRadius: 10,
-                  height: "2rem",
-                  marginTop: 1,
-                }}
-                onMouseOut={() => setOpen(false)}
-              >
-                <IconLabelButton icon={<InfoOutlinedIcon />} title="info" />
-                {open && (
-                  <Typography
-                    sx={{ fontWeight: "bold" }}
-                    color={theme.palette.secondary.main}
-                    mr={1}
-                  >
-                    2018 ford
-                  </Typography>
-                )}
-              </Box>
-            )}
-          </>
-        )}
-      </Box>
-    </>
+          )}
+        </>
+      )}
+    </Box>
   );
 
   const rightButtons = (
@@ -183,7 +198,7 @@ const CarButtons = ({ value, handleTabChange }) => {
           <CancelIcon fontSize="large" />
         </IconButton>
       </Box>
-      <RightRoot>
+      <RightButtons>
         <Fab
           color={"primary"}
           icon={
@@ -196,8 +211,8 @@ const CarButtons = ({ value, handleTabChange }) => {
           onClick={handleChange}
         />
         <Fade in={checked}>
-          <Box>
-            <Box display={"block"} mb={1}>
+          <Box my={1}>
+            <Box display={"block"}>
               <Fab
                 color={"primary"}
                 icon={<WarrantyIcon color="secondary" />}
@@ -212,7 +227,7 @@ const CarButtons = ({ value, handleTabChange }) => {
                 warranty
               </Typography>
             </Box>
-            <Box display={"block"} mb={1}>
+            <Box display={"block"}>
               <Fab
                 color={"primary"}
                 icon={<OverviewIcon color="secondary" />}
@@ -229,115 +244,108 @@ const CarButtons = ({ value, handleTabChange }) => {
             </Box>
           </Box>
         </Fade>
-      </RightRoot>
+      </RightButtons>
     </>
   );
 
-  const [x, setX] = useState("");
-  const [y, setY] = useState("");
-
-  const show = Boolean(x);
-  const handleClick = (event) => {
-    const { clientX, clientY } = event;
-    console.log(event);
-    if (x) {
-      setY(null);
-      setX(null);
-    } else {
-      setX(clientX);
-      setY(clientY);
-      console.log(event);
-    }
-  };
-
-  const handleCloseMenu = () => {
-    setX(null);
-    setY(null);
-  };
+  function convertPixelsToRem() {
+    return (
+      parseFloat(getComputedStyle(document.documentElement).fontSize) * 3
+    );
+  }
 
   const carTab = (
-    <Box sx={carTabIndex === 1 ? topStyle : bottomStyle}>
-      <Tabs
-        value={value}
-        onChange={handleTabChange}
-        centered
-        sx={{
-          background: "#1E1E1E",
-          ".MuiTabs-flexContainer": {
-            display: "flex",
-            justifyContent: "space-around",
-          },
-        }}
-      >
-        <Tab
-          label="Exterior"
-          sx={{ color: value === 0 ? "white !important" : "gray" }}
-        />
-        <Tab
-          label="Interior"
-          icon={
-            show ? (
+    <Tabs
+      value={value}
+      onChange={handleTabChange}
+      centered
+      ref={ref}
+      sx={carTabIndex === 1 ? { top: 10 } : { bottom: 10 }}
+    >
+      <Tab
+        label="Exterior"
+        sx={{ color: value === 0 ? "white !important" : "gray" }}
+      />
+      <Tab
+        label="Interior"
+        icon={
+          <IconButton
+            onClick={handleClick}
+            sx={{ color: value === 1 ? "white !important" : "gray" }}
+          >
+            {show ? (
               <KeyboardArrowUpRoundedIcon />
             ) : (
               <KeyboardArrowDownRoundedIcon />
-            )
-          }
-          iconPosition="end"
-          onClick={handleClick}
-          sx={{ color: value === 1 ? "white !important" : "gray" }}
-        />
-        <Tab
-          label="Gallery"
-          sx={{ color: value === 2 ? "white !important" : "gray " }}
-        />
-        <Tab
-          label="Walk Around"
-          sx={{ color: value === 3 ? "white !important" : "gray " }}
-        />
-      </Tabs>
-    </Box>
+            )}
+          </IconButton>
+        }
+        iconPosition="end"
+        sx={{ color: value === 1 ? "white !important" : "gray" }}
+      />
+      <Tab
+        label="Gallery"
+        sx={{ color: value === 2 ? "white !important" : "gray " }}
+      />
+      <Tab
+        label="Walk Around"
+        sx={{ color: value === 3 ? "white !important" : "gray " }}
+      />
+    </Tabs>
   );
 
-  const handleMenu = (data) => {
-    dispatch(toggledEnteriorCarStatus(undefined));
-    setTimeout(() => {
-      dispatch(toggledEnteriorCarStatus(data));
-    }, 100);
-    handleCloseMenu();
-  };
+  const list = (
+    <Box
+      sx={{
+        position: "absolute",
+        left: offsetLeft + convertPixelsToRem(),
+        top: "5rem",
+        opacity: 0.9,
+        borderRadius: (theme) => theme.spacing(1),
+        width: "15rem",
+        maxWidth: 360,
+        bgcolor: (theme) => theme.palette.primary.darkest,
+      }}
+    >
+      <Divider />
+      <nav aria-label="secondary mailbox folders">
+        <List>
+          <ListItem
+            sx={{ color: "white" }}
+            disablePadding
+            onClick={() => handleMenu("front")}
+          >
+            <ListItemButton>
+              <ListItemText primary=" See Center Console" />
+            </ListItemButton>
+          </ListItem>
+          <Divider />
+          <ListItem
+            sx={{ color: "white" }}
+            disablePadding
+            onClick={() => handleMenu("back")}
+          >
+            <ListItemButton component="a" href="#simple-list">
+              <ListItemText primary="See Back Seat" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem sx={{ color: "white" }} disablePadding>
+            <ListItemButton component="a" href="#simple-list">
+              <ListItemText primary="Push Start" />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </nav>
+    </Box>
+  );
 
   return (
     <>
       {leftButtons}
       {(carTabIndex === 0 || carTabIndex === 3) && rightButtons}
       {carTab}
-      {/* <Dialog open={oprnDialog} setOpen={(data) => setOpneDialog(data)} /> */}
-      {x && y && (
-        <Box sx={{ position: "absolute", left: x, top: y }}>
-          <BasicList />
-        </Box>
-      )}
-      {/* <Menu
-        id="basic-menu"
-        sx={{ position: "absolute", left: "100px", top: "100px" }}
-        open={show}
-        onClose={handleCloseMenu}
-        MenuListProps={{
-          "aria-labelledby": "basic-button",
-        }}
-      >
-        <MenuItem
-          className="interior-front-image"
-          id="interior-front-image"
-          onClick={() => handleMenu("front")}
-        >
-          Push Start
-        </MenuItem>
-        <MenuItem id="interior-back-image" onClick={() => handleMenu("back")}>
-          See Back Seat
-        </MenuItem>
-        <MenuItem onClick={handleCloseMenu}>See Center Console</MenuItem>
-      </Menu> */}
+      {show && list}
+      {/* <Dialog open={openDialog} setOpen={(data) => setOpneDialog(data)} /> */}
     </>
   );
 };

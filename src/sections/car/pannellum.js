@@ -52,7 +52,6 @@ function Interior360() {
   const [pitch, setPitch] = useState(0); // move in y -180,180
 
   const handleClick = (evt, name) => {
-    console.log(evt);
     setShowTooltip(true);
 
     setYaw(-120);
@@ -68,7 +67,6 @@ function Interior360() {
   // const element = document.getElementsByClassName("pnlm-render-container")[0];
   const element = document.querySelector(".pnlm-container");
   // element?.remove()
-  console.log(element);
   useEffect(() => {
     if (isHotspot)
       document

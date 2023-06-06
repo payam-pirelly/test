@@ -9,7 +9,7 @@ const theme = createTheme({
       light: "#EBEEFE",
       main: "#E1F0FF",
       dark: "#E1F0FF", //hover
-      darkest: "#312E81",
+      darkest: "#1E1E1E",
       contrastText: "#FFFFFF",
     },
     secondary: {
