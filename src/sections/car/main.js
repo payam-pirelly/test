@@ -17,74 +17,44 @@ export default function Main({ onClick }) {
     onClick();
   };
 
-  const handleClickCarIn = () => {
-    dispatch(toggledCarStatus("carOut"));
-    onClick();
-  };
-
   return (
-    <>
-      <Box
-        component="main"
-        display={"flex"}
-        alignItems={"center"}
-        sx={{
-          flexGrow: 1,
-        }}
-      >
-        <MUIContainer maxWidth={"100%"}>
-          <Grid container sx={{ flex: "1 1 auto" }} justifyContent={"center"}>
-            <Grid
-              item
-              xs={8}
-              maxHeight={height}
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Card sx={{ boxShadow: "none !important", paddingTop: 1 }}>
-                <Box
+    <Box display={"flex"} alignItems={"center"} overflow={"hidden"}>
+      <MUIContainer maxWidth={"100%"}>
+        <Grid container justifyContent={"center"}>
+          <Grid item xs={8}>
+            <Card sx={{ boxShadow: "none" }}>
+              <Box
+                sx={{
+                  position: "relative",
+                }}
+              >
+                <img
+                  src={imagePath}
                   style={{
-                    textAlign: "center",
-                    position: "relative",
+                    maxHeight: height,
+                    width: "100%",
+                    borderRadius: 10,
                   }}
-                >
-                  <img
-                    src={imagePath}
-                    style={{
-                      objectFit: "contain",
-                      width: "100%",
-                      height: "auto",
-                      borderRadius: 10,
-                      overflow: "hidden",
-                    }}
-                    alt="image"
-                    width={width * 0.6}
-                    height={height}
-                    loading="lazy"
-                  />
-
-                  <Box position="absolute" top={"55%"} left={"35%"} zIndex={1}>
-                    <IconButton onClick={handleClick}>
-                      <img
-                        src="/view360.svg"
-                        alt="view360.svg"
-                        width={width * 0.2}
-                        height="auto"
-                      />
-                    </IconButton>
-                  </Box>
+                  alt="image"
+                  loading="lazy"
+                />
+                <Box position="absolute" top={"50%"} left={"35%"}>
+                  <IconButton onClick={handleClick} sx={{ padding: 0 }}>
+                    <img
+                      src="/view360.svg"
+                      alt="view360.svg"
+                      width={width * 0.2}
+                    />
+                  </IconButton>
                 </Box>
-                <CardContent sx={{ padding: 0 }}>
-                  <CarVerticalList onClick={onClick} />
-                </CardContent>
-              </Card>
-            </Grid>
+              </Box>
+              <CardContent sx={{ padding: 0 }}>
+                <CarVerticalList onClick={onClick} />
+              </CardContent>
+            </Card>
           </Grid>
-        </MUIContainer>
-      </Box>
-    </>
+        </Grid>
+      </MUIContainer>
+    </Box>
   );
 }

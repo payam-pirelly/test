@@ -1,10 +1,19 @@
 import * as React from "react";
 import PropTypes from "prop-types";
-import { Box, Typography, Tab, Tabs, ImageList, ImageListItem, Button } from "@mui/material";
+import {
+  Box,
+  Tab,
+  Tabs,
+  ImageList,
+  ImageListItem,
+  Button,
+  IconButton,
+} from "@mui/material";
 import { useDispatch } from "react-redux";
 import CarItem from "./gallery-car-Item";
 import { useState } from "react";
-import { toggledCarIndex } from "../../redux/car-slice";
+import { toggledCarIndex, toggledCarTabIndex } from "../../redux/car-slice";
+import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -17,11 +26,7 @@ function TabPanel(props) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 }
@@ -43,62 +48,72 @@ export default function CarsList() {
   const [value, setValue] = React.useState(0);
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
   return (
     <>
-      <Box sx={{ width: "100%" }}>
-        <Box
-          sx={{ borderBottom: 1, borderColor: "divider" }}
-          display={"flex"}
-          justifyContent={"center"}
-        >
-          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="Interior" {...a11yProps(0)} />
-            <Tab label="Exterior" {...a11yProps(1)} />
-          </Tabs>
-        </Box>
-        <TabPanel value={value} index={0}>
-          <ImageList cols={4}>
-            {itemData.map((item,) => (
-              <Button
-                onClick={() => {
-                  dispatch(toggledCarIndex(item.img));
-                  setOpen(true);
-                }}
-              >
-                <ImageListItem key={item.img}>
-                  <img
-                    style={{ borderRadius: 10 }}
-                    src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-                    srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                    alt={item.title}
-                    loading="lazy"
-                  />
-                </ImageListItem>
-              </Button>
-            ))}
-          </ImageList>
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <ImageList cols={4}>
-            {itemData1.map((item) => (
+      <IconButton
+        onClick={() => dispatch(toggledCarTabIndex(0))}
+        sx={{
+          position: "absolute",
+          left: (theme) => theme.spacing(2),
+          color: "black",
+        }}
+      >
+        <ArrowBackRoundedIcon fontSize="large" />
+      </IconButton>
+      <Tabs value={value} onChange={handleChange} indicatorColor="secondary">
+        <Tab
+          sx={{ color: "black !important", fontWeight: 700 }}
+          label="Interior"
+          {...a11yProps(0)}
+        />
+        <Tab
+          sx={{ color: "black !important", fontWeight: 700 }}
+          label="Exterior"
+          {...a11yProps(1)}
+        />
+      </Tabs>
+      <TabPanel value={value} index={0}>
+        <ImageList cols={4}>
+          {itemData.map((item) => (
+            <Button
+              onClick={() => {
+                dispatch(toggledCarIndex(item.img));
+                setOpen(true);
+              }}
+            >
               <ImageListItem key={item.img}>
                 <img
                   style={{ borderRadius: 10 }}
-                  src={`${item.img}?w=164&h=164&fit=crop&auto=format`}
-                  srcSet={`${item.img}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
+                  src={`${item.img}`}
+                  srcSet={`${item.img}`}
                   alt={item.title}
                   loading="lazy"
                 />
               </ImageListItem>
-            ))}
-          </ImageList>
-        </TabPanel>
-      </Box>
+            </Button>
+          ))}
+        </ImageList>
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <ImageList cols={4}>
+          {itemData1.map((item) => (
+            <ImageListItem key={item.img}>
+              <img
+                style={{ borderRadius: 10 }}
+                src={`${item.img}`}
+                srcSet={`${item.img}`}
+                alt={item.title}
+                loading="lazy"
+              />
+            </ImageListItem>
+          ))}
+        </ImageList>
+      </TabPanel>
+
       <CarItem open={open} onClose={() => setOpen(false)} />
     </>
   );

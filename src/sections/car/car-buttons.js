@@ -29,8 +29,8 @@ import Fab from "../../components/button/fab";
 import {
   toggledCarStatus,
   toggledCarTabIndex,
-  toggledEnteriorCarStatus,
-  toggledIsHotspot,
+  toggledInteriorCarStatus,
+  carHotSpotEnableSet,
 } from "../../redux/car-slice";
 import { exitFullscreen } from "../../utils/fullscreen";
 import HotspotIcon from "../../components/icon/hotspot-icon";
@@ -38,7 +38,8 @@ import IconLabelButton from "../../components/button/Icon-label-button";
 import CancelIcon from "../../components/icon/cancel-icon";
 import WarrantyIcon from "../../components/icon/warranty-icon";
 import OverviewIcon from "../../components/icon/overview-icon";
-import Dialog from "../../components/dialog/dialog";
+import CardHistory from "../../components/card/card-history";
+import CardWarranty from "../../components/card/card-warranty";
 
 const RightButtons = styled("div")(({}) => ({
   top: "8rem",
@@ -77,11 +78,13 @@ const exterior = {
 
 const CarButtons = ({ value, handleTabChange }) => {
   const dispatch = useDispatch();
+
   const [checked, setChecked] = useState(false);
-  const { carTabIndex } = useSelector((state) => state.car);
+  const { carTabIndex, carHotSpotEnable } = useSelector((state) => state.car);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [openDialog, setOpneDialog] = useState(false);
+  const [openHistory, setOpenHistory] = useState(false);
+  const [openWarranty, setOpenWarranty] = useState(false);
   const [show, setShow] = useState(false);
   const ref = useRef();
   const offsetLeft = ref?.current?.offsetLeft;
@@ -107,20 +110,21 @@ const CarButtons = ({ value, handleTabChange }) => {
   };
 
   const handleMenu = (data) => {
-    dispatch(toggledEnteriorCarStatus(undefined));
+    dispatch(toggledInteriorCarStatus(undefined));
     setTimeout(() => {
-      dispatch(toggledEnteriorCarStatus(data));
+      dispatch(toggledInteriorCarStatus(data));
     }, 100);
     handleCloseMenu();
   };
 
+  const handleChangeHotspot = () => {
+    if (carHotSpotEnable) dispatch(carHotSpotEnableSet(false));
+    else dispatch(carHotSpotEnableSet(true));
+  };
+
   const leftButtons = (
     <Box sx={carTabIndex === 1 ? interior : exterior}>
-      {carTabIndex === 2 ? (
-        <IconButton onClick={() => dispatch(toggledCarTabIndex(0))}>
-          <ArrowBackRoundedIcon fontSize="large" />
-        </IconButton>
-      ) : (
+      {carTabIndex !== 2 && (
         <>
           <Box
             sx={{
@@ -129,7 +133,10 @@ const CarButtons = ({ value, handleTabChange }) => {
               height: "2rem",
               width: "10rem",
               alignItems: "center",
-              background: (theme) => theme.palette.primary.main,
+              background: (theme) =>
+                carTabIndex === 0
+                  ? theme.palette.primary.main
+                  : theme.palette.primary.darkest,
               opacity: 0.9,
               justifyContent: "space-around",
             }}
@@ -145,9 +152,10 @@ const CarButtons = ({ value, handleTabChange }) => {
               Hotspot
             </Typography>
             <Switch
+              checked={carHotSpotEnable}
               size="small"
               color="secondary"
-              onChange={() => dispatch(toggledIsHotspot())}
+              onChange={handleChangeHotspot}
             />
           </Box>
           {carTabIndex !== 1 && (
@@ -216,7 +224,7 @@ const CarButtons = ({ value, handleTabChange }) => {
               <Fab
                 color={"primary"}
                 icon={<WarrantyIcon color="secondary" />}
-                onClick={handleChange}
+                onClick={() => setOpenWarranty(true)}
               />
               <Typography
                 sx={{ color: "black", fontSize: "xx-small" }}
@@ -231,7 +239,7 @@ const CarButtons = ({ value, handleTabChange }) => {
               <Fab
                 color={"primary"}
                 icon={<OverviewIcon color="secondary" />}
-                onClick={handleChange}
+                onClick={() => setOpenHistory(true)}
               />
               <Typography
                 sx={{ color: "black", fontSize: "xx-small" }}
@@ -249,9 +257,7 @@ const CarButtons = ({ value, handleTabChange }) => {
   );
 
   function convertPixelsToRem() {
-    return (
-      parseFloat(getComputedStyle(document.documentElement).fontSize) * 3
-    );
+    return parseFloat(getComputedStyle(document.documentElement).fontSize) * 3;
   }
 
   const carTab = (
@@ -269,7 +275,7 @@ const CarButtons = ({ value, handleTabChange }) => {
       <Tab
         label="Interior"
         icon={
-          <IconButton
+          <Box
             onClick={handleClick}
             sx={{ color: value === 1 ? "white !important" : "gray" }}
           >
@@ -278,7 +284,7 @@ const CarButtons = ({ value, handleTabChange }) => {
             ) : (
               <KeyboardArrowDownRoundedIcon />
             )}
-          </IconButton>
+          </Box>
         }
         iconPosition="end"
         sx={{ color: value === 1 ? "white !important" : "gray" }}
@@ -316,7 +322,7 @@ const CarButtons = ({ value, handleTabChange }) => {
             onClick={() => handleMenu("front")}
           >
             <ListItemButton>
-              <ListItemText primary=" See Center Console" />
+              <ListItemText primary="See Center Console" />
             </ListItemButton>
           </ListItem>
           <Divider />
@@ -345,7 +351,11 @@ const CarButtons = ({ value, handleTabChange }) => {
       {(carTabIndex === 0 || carTabIndex === 3) && rightButtons}
       {carTab}
       {show && list}
-      {/* <Dialog open={openDialog} setOpen={(data) => setOpneDialog(data)} /> */}
+      <CardWarranty
+        open={openWarranty}
+        onClose={() => setOpenWarranty(false)}
+      />
+      <CardHistory open={openHistory} onClose={() => setOpenHistory(false)} />
     </>
   );
 };

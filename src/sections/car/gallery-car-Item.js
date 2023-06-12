@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  Avatar,
   Backdrop,
   Card,
   CardHeader,
@@ -13,13 +12,11 @@ import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRound
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import { useMemo } from "react";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import ShowWindowDimensions from "../../utils/resize";
 import { toggledCarIndex } from "../../redux/car-slice";
 
 export default function GalleryCarItem({ open, onClose }) {
   const { carIndex } = useSelector((state) => state.car);
   const dispatch = useDispatch();
-  const { width, height } = ShowWindowDimensions();
 
   const handleClick = (num) => {
     let value = carIndex;
@@ -33,21 +30,6 @@ export default function GalleryCarItem({ open, onClose }) {
         <IconButton sx={{ position: "absolute", right: 0, top: 0 }}>
           <div>salam</div>
         </IconButton>
-        {/* <Image
-          id="image"
-          alt="image"
-          priority
-          src={`/images/${carIndex}.jpg`}
-          style={{
-            objectFit: "contain",
-            width: "auto",
-            height: "auto",
-            borderRadius: 10,
-            overflow: "hidden",
-          }}
-          width={width * 0.8}
-          height={100}
-        /> */}
       </>
     ),
     [carIndex]
@@ -71,8 +53,14 @@ export default function GalleryCarItem({ open, onClose }) {
         <CardHeader
           action={
             <Fab
-              aria-label="settings"
-              sx={{ color: "white", marginBottom: "-7rem" }}
+              sx={{
+                background: (theme) => theme.palette.secondary.light,
+                "&:hover": {
+                  backgroundColor: (theme) => theme.palette.secondary.darkest,
+                },
+                color: "white",
+                marginBottom: "-7rem",
+              }}
               onClick={onClose}
             >
               <CloseRoundedIcon />
@@ -100,31 +88,4 @@ export default function GalleryCarItem({ open, onClose }) {
       </IconButton>
     </Backdrop>
   );
-}
-
-{
-  /* <div>
-        <Backdrop sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }} open={open}>
-          <IconButton
-            edge="end"
-            sx={{ position: "absolute", top: "50%", left: 10, color: "white" }}
-            onClick={() => handleClick(-1)}
-          >
-            <ArrowBackIosNewRoundedIcon />
-          </IconButton>
-          {image}
-          <IconButton
-            edge="start"
-            sx={{
-              position: "absolute",
-              top: "50%",
-              right: 10,
-              color: "white",
-            }}
-            onClick={() => handleClick(+1)}
-          >
-            <ArrowForwardIosRoundedIcon />
-          </IconButton>
-        </Backdrop>
-      </div> */
 }

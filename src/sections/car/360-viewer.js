@@ -3,16 +3,23 @@ import { Box, IconButton, Tooltip } from "@mui/material";
 import React, { Component } from "react";
 import { styled } from "@mui/material/styles";
 import Mouse from "../../utils/base64";
+import { connect } from "react-redux";
 
 import Hammer from "react-hammerjs";
 
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
-import LineTo from "./lineto";
-import HotspotCard from "./hotspot-card";
-import CloseIcon from "../../components/icon/close-icon";
 import HotspotPointerIcon from "../../components/icon/hotspot-pointer-icon";
 import Fab from "../../components/button/fab";
+import {
+  carHotSpotCardOpenToggled,
+  carHotSpotCardStatusSet,
+  carHotSpotEnableSet,
+  carHotSpotPositionsSet,
+  currentCarHotSpotIndexSet,
+  toggledSecondHotSpotPosition,
+} from "../../redux/car-slice";
+import HotspotDetail from "./hotspot-detail";
 
 const LeftButtons = styled("div")(({}) => ({
   top: "50%",
@@ -61,7 +68,6 @@ class React360Viewer extends Component {
     this.viewPercentageRef = React.createRef();
     this.viewPortElementRef = React.createRef();
     this.canvas = null;
-    this.showHotSpotCard = false;
     this.ctx = null;
     this.isMobile = false;
     this.imageData = [];
@@ -83,6 +89,7 @@ class React360Viewer extends Component {
     this.y = 0;
     this.previousX = 0;
     this.previousY = 0;
+    this.carHotspot = { x: 0, y: 0, image: 0 };
 
     this.state = {
       lastX: 0,
@@ -114,11 +121,11 @@ class React360Viewer extends Component {
       loopTimeoutId: 0,
       playing: false,
       imagesLoaded: false,
-      showHotSpotCard: false,
       x: 0,
       y: 0,
       previousX: 0,
       previousY: 0,
+      carHotspot: { x: 0, y: 0, image: 0 },
     };
 
     //this.currentLeftPosition = this.currentLeftPosition.bind(this)
@@ -141,13 +148,15 @@ class React360Viewer extends Component {
   }
 
   fetchData() {
+    //
+    if (this.imageData.length === this.props.amount) return;
+    //
     for (let i = 1; i <= this.props.amount; i++) {
       const imageIndex = this.props.paddingIndex ? this.lpad(i, "0", 2) : i;
       const fileName = this.props.fileName.replace("{index}", imageIndex);
       const filePath = `${this.props.imagePath}/${fileName}`;
       this.imageData.push(filePath);
     }
-
     this.preloadImages();
   }
 
@@ -192,7 +201,7 @@ class React360Viewer extends Component {
     if (this.loadedImages === this.props.amount) {
       this.onAllImagesLoaded(event);
     } else if (this.loadedImages === 1) {
-      //this.onFirstImageLoaded(event);
+      // this.onFirstImageLoaded(event);
       console.log("load first image");
     }
   }
@@ -574,6 +583,9 @@ class React360Viewer extends Component {
 
   zoom(zoom) {
     this.setState({ currentScale: (this.currentScale += zoom) });
+    if (this.currentScale === 1) {
+      this.setState({ ...this.state, x: 0, y: 0, currentScale: 1 });
+    }
     //console.log(this.lastX + ' - ' + this.lastY)
     // let factor = Math.pow(1.01, clicks);
     // let factor = Math.pow(1.1, zoom);
@@ -642,7 +654,6 @@ class React360Viewer extends Component {
       }
       this.redraw();
     }
-    console.log(this.activeImage);
   }
 
   startMoving = (evt) => {
@@ -654,39 +665,67 @@ class React360Viewer extends Component {
 
   doMoving = (evt) => {
     if (this.currentScale > 1) {
+      const { height, width } =
+        this.viewPortElementRef?.getBoundingClientRect();
       const { clientX, clientY } = evt;
       let xValue = 0,
         yValue = 0;
       if (clientX > this.state.previousX && clientY > this.state.previousY) {
-        xValue = 1;
-        yValue = 1;
+        xValue = 2;
+        yValue = 2;
+      } else if (
+        clientX > this.state.previousX &&
+        clientY === this.state.previousY
+      ) {
+        xValue = 2;
+        yValue = 0;
+      } else if (
+        clientX === this.state.previousX &&
+        clientY < this.state.previousY
+      ) {
+        xValue = 0;
+        yValue = -2;
+      } else if (
+        clientX === this.state.previousX &&
+        clientY > this.state.previousY
+      ) {
+        xValue = 0;
+        yValue = 2;
+      } else if (
+        clientX < this.state.previousX &&
+        clientY === this.state.previousY
+      ) {
+        xValue = -2;
+        yValue = 0;
       } else if (
         clientX < this.state.previousX &&
         clientY < this.state.previousY
       ) {
-        xValue = -1;
-        yValue = -1;
+        xValue = -2;
+        yValue = -2;
       } else if (
         clientX < this.state.previousX &&
         clientY > this.state.previousY
       ) {
-        xValue = -1;
-        yValue = 1;
+        xValue = -2;
+        yValue = 2;
       } else if (
         clientX > this.state.previousX &&
         clientY < this.state.previousY
       ) {
-        xValue = 1;
-        yValue = -1;
+        xValue = 2;
+        yValue = -2;
       }
-      console.log("yValue", yValue);
-      console.log("xValue", xValue);
 
       if (this.movement) {
         this.state.previousX = clientX;
         this.state.previousY = clientY;
-        this.state.x = this.state.x + xValue;
-        this.state.y = this.state.y + yValue;
+        if (width / (this.currentScale * 2) < Math.abs(this.state.x))
+          this.state.x = this.state.x - xValue;
+        else this.state.x = this.state.x + xValue;
+        if (height / (this.currentScale * 2) < Math.abs(this.state.y))
+          this.state.y = this.state.y - yValue;
+        else this.state.y = this.state.y + yValue;
         this.setState({ ...this.state });
       }
 
@@ -698,7 +737,6 @@ class React360Viewer extends Component {
   };
 
   handleDragging = (evt) => {
-    console.log(evt);
     if (this.currentScale > 1 && this.movement) {
       const { clientX, clientY } = evt;
       // console.log(movementX, movementY);
@@ -801,13 +839,27 @@ class React360Viewer extends Component {
     this.currentScale = 1;
   };
 
-  handleClick = (data) => {
-    this.showHotSpotCard = data;
-    this.setState({ showHotSpotCard: data });
+  handleSetPositions = () => {
+    const list = [];
+
+    this.props.car?.cars?.forEach((car) => {
+      if (car?.image === this.activeImage) {
+        let value = { x: 0, y: 0, image: 0, id: 0 };
+        value.id = car?.id;
+        value.image = car?.image;
+        value.y =
+          (this.imageContainerRef?.getBoundingClientRect()?.height / 100) *
+          car.y;
+        value.x =
+          (this.imageContainerRef?.getBoundingClientRect()?.width / 100) *
+          car.x;
+        list.push(value);
+      }
+    });
+    this.props.carHotSpotPositionsSet(list);
   };
 
   render() {
-    console.log(this.showHotSpotCard);
     return (
       <div
         style={{
@@ -841,40 +893,53 @@ class React360Viewer extends Component {
             }}
           >
             <Canvas ref={(inputEl) => (this.imageContainerRef = inputEl)} />
-            {this.activeImage === 1 && this.props.isHotspot && (
-              <Box
-                sx={{
-                  position: "absolute",
-                  zIndex: 1,
-                  top:
-                    (this.imageContainerRef?.getBoundingClientRect()?.height /
-                      100) *
-                    52,
-                  left:
-                    (this.imageContainerRef?.getBoundingClientRect()?.width /
-                      100) *
-                    50,
-                  display: "flex",
-                }}
-              >
-                <Tooltip title={"Hood"}>
-                  <IconButton
-                    sx={{ zIndex: (theme) => theme.zIndex.tooltip }}
-                    className="A"
-                    onClick={() => {
-                      if (this.showHotSpotCard) this.handleClick(false);
-                      else this.handleClick(true);
-                    }}
-                  >
-                    {this.showHotSpotCard ? (
-                      <CloseIcon />
-                    ) : (
-                      <HotspotPointerIcon />
-                    )}
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            )}
+            {this.props.carHotSpotEnable &&
+              this.props.car?.cars.map((car) => (
+                <>
+                  {this.activeImage === car?.image && (
+                    <>
+                      <Box
+                        key={car?.id}
+                        sx={{
+                          position: "absolute",
+                          zIndex: 1,
+                          top:
+                            (this.imageContainerRef?.getBoundingClientRect()
+                              ?.height /
+                              100) *
+                            car.y,
+                          left:
+                            (this.imageContainerRef?.getBoundingClientRect()
+                              ?.width /
+                              100) *
+                            car.x,
+                          display: "flex",
+                        }}
+                      >
+                        <Tooltip title={"Hood"}>
+                          <IconButton
+                            sx={{ zIndex: (theme) => theme.zIndex.tooltip }}
+                            onClick={(evt) => {
+                              const { clientX, clientY } = evt;
+                              this.props.toggledSecondHotSpotPosition({
+                                x: clientX,
+                                y: clientY,
+                              });
+                              this.props.carHotSpotCardStatusSet(2);
+                              this.props.carHotSpotCardOpenToggled();
+                              this.props.carHotSpotEnableSet(false);
+                              this.props.currentCarHotSpotIndexSet(car?.id);
+                              this.handleSetPositions();
+                            }}
+                          >
+                            <HotspotPointerIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
+                    </>
+                  )}
+                </>
+              ))}
             {this.props.boxShadow ? <Shadow /> : ""}
           </V360>
         </Hammer>
@@ -892,35 +957,29 @@ class React360Viewer extends Component {
             disabled={this.currentScale === 1 ? true : false}
           />
         </LeftButtons>
-        {/* <LineTo
-          from="A"
-          to="B"
-          borderColor={"#1862E3"}
-          delay={10}
-        /> */}
-        {this.showHotSpotCard && (
-          <>
-            <div
-              style={{
-                borderTop: "1px solid rgb(24, 98, 227)",
-                position: "absolute",
-                top: "519.734px",
-                left: "721.5px",
-                width: "455.779px",
-                zIndex: 1,
-                transform: "rotate(-136.846deg)",
-                transformOrigin: "0px 0px",
-              }}
-            ></div>
-            <HotspotCard
-              onClick={() => this.handleClick(false)}
-              opacity={this.showHotSpotCard ? "flex" : "none"}
-            />
-          </>
-        )}
+        <HotspotDetail />
       </div>
     );
   }
 }
 
-export default React360Viewer;
+function mapStateToProps(state) {
+  const car = state.car;
+  return {
+    car,
+  };
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  toggledSecondHotSpotPosition: (data) =>
+    dispatch(toggledSecondHotSpotPosition(data)),
+  carHotSpotCardStatusSet: (data) => dispatch(carHotSpotCardStatusSet(data)),
+  carHotSpotCardOpenToggled: (data) =>
+    dispatch(carHotSpotCardOpenToggled(data)),
+  carHotSpotEnableSet: (data) => dispatch(carHotSpotEnableSet(data)),
+  carHotSpotPositionsSet: (data) => dispatch(carHotSpotPositionsSet(data)),
+  currentCarHotSpotIndexSet: (index) =>
+    dispatch(currentCarHotSpotIndexSet(index)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(React360Viewer);

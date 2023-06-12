@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import React from "react";
-import { Box, Container as MUIContainer } from "@mui/system";
+import { Box } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
 import { useMemo } from "react";
 import Main from "./main";
@@ -12,10 +12,11 @@ import { enterFullScreen } from "../../utils/fullscreen";
 export default function Container() {
   const { carStatus } = useSelector((state) => state.car);
   const dispatch = useDispatch();
+  const { height, width } = ShowWindowDimensions();
 
   const handleOnClick = () => {
-    var fullscreenId = document.getElementById("fullscreen");
-    enterFullScreen(fullscreenId);
+    // var fullscreenId = document.getElementById("fullscreen");
+    enterFullScreen(document.documentElement);
     dispatch(toggledFullScreen(true));
   };
 
@@ -25,34 +26,23 @@ export default function Container() {
         return <Main onClick={handleOnClick} />;
       case "carOut":
         return <CarOut />;
-
       default:
         return <>loading!!!</>;
     }
   }, [carStatus]);
 
-  const { height } = ShowWindowDimensions();
   return (
     <>
       <Box
         id="fullscreen"
         component="main"
         height={height}
+        width={width}
         display={"flex"}
-        alignItems={"center"}
-        sx={{
-          flexGrow: 1,
-        }}
       >
-        <MUIContainer maxWidth={"100%"} sx={{ height: "100%", width: "100%" }}>
-          <Grid
-            container
-            sx={{ flex: "1 1 auto", height: "100%" }}
-            justifyContent={"center"}
-          >
-            {renderContent}
-          </Grid>
-        </MUIContainer>
+        <Grid container justifyContent={"center"}>
+          {renderContent}
+        </Grid>
       </Box>
     </>
   );

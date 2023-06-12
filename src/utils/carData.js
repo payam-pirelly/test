@@ -1,8 +1,9 @@
 export const carData = [
-  { image: 1, x: 25, y: 50, title: "Engine", detail: "motor" },
-  { image: 2, x: 25, y: 50, title: "the hood", detail: "motor" },
-  { image: 3, x: 20, y: 50, title: "the hood", detail: "motor" },
-  { image: 4, x: 20, y: 50, title: "the hood", detail: "motor" },
+  { id: 1, image: 1, x: 50, y: 50, title: "Engine", detail: "motor" },
+  { id: 2, image: 1, x: 50, y: 70, title: "Engine", detail: "motor" },
+  { id: 3, image: 2, x: 25, y: 50, title: "the hood", detail: "motor" },
+  { id: 4, image: 3, x: 20, y: 50, title: "the hood", detail: "motor" },
+  { id: 5, image: 4, x: 20, y: 50, title: "the hood", detail: "motor" },
   { image: 5, x: 15, y: 50, title: "the hood", detail: "motor" },
   { image: 6, x: 30, y: 60, title: "the tire", detail: "tire" },
   { image: 7, x: 30, y: 60, title: "the tire", detail: "tire" },

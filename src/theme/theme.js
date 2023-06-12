@@ -6,7 +6,7 @@ const theme = createTheme({
   palette: {
     primary: {
       lightest: "#F5F7FF",
-      light: "#EBEEFE",
+      light: "#D4D4D5",
       main: "#E1F0FF",
       dark: "#E1F0FF", //hover
       darkest: "#1E1E1E",
@@ -14,10 +14,10 @@ const theme = createTheme({
     },
     secondary: {
       lightest: "#F5F7FF",
-      light: "#EBEEFE",
+      light: "#79797A",
       main: "#1862E3",
       dark: "#1862E3", //hover
-      darkest: "#312E81",
+      darkest: "#79797A",
       contrastText: "#FFFFFF",
     },
     error: {

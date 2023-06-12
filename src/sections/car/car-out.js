@@ -1,11 +1,11 @@
 import React from "react";
 import { useMemo } from "react";
-import ShowCars from "./cars-list";
 import CarButtons from "./car-buttons";
-import ThreeSixtyView from "./three-sixty";
 import { useDispatch, useSelector } from "react-redux";
 import { toggledCarTabIndex } from "../../redux/car-slice";
-import Interior360 from "./pannellum";
+import Exterior360 from "./exterior-360";
+import Interior360 from "./interior-360";
+import CarsList from "./cars-list";
 
 export default function CarOut() {
   const { carTabIndex } = useSelector((state) => state.car);
@@ -18,11 +18,11 @@ export default function CarOut() {
   const renderContent = useMemo(() => {
     switch (carTabIndex) {
       case 0:
-        return <ThreeSixtyView />;
+        return <Exterior360 />;
       case 1:
         return <Interior360 />;
       case 2:
-        return <ShowCars />;
+        return <CarsList />;
       case 3:
         return 4;
       default:

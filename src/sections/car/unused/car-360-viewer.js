@@ -10,7 +10,7 @@ import { toggledCarIndex } from "../../../redux/car-slice";
 const Car360Viewer = () => {
   //Selector
   const cars = useSelector((state) => state.car?.car);
-  const { isHotspot } = useSelector((state) => state.car);
+  const { carHotSpotEnable } = useSelector((state) => state.car);
 
   //Ref
   const ref = useRef();
@@ -75,7 +75,7 @@ const Car360Viewer = () => {
                 width={width}
                 height={height}
               />
-              {i?.detail && isHotspot && (
+              {i?.detail && carHotSpotEnable && (
                 <Box
                   sx={{
                     position: "absolute",
