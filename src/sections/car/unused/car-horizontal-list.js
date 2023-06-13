@@ -1,15 +1,15 @@
 import * as React from "react";
 import { ImageList, ImageListItem, ImageListItemBar } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { toggledCarIndex } from "../../../redux/car-slice";
+import { showCarIndexSet } from "../../../redux/car-slice";
 
 export default function CarHorizontalList() {
   const cars = useSelector((state) => state.car?.car);
-  const { carIndex } = useSelector((state) => state.car);
+  const { showCarIndex } = useSelector((state) => state.car);
   const dispatch = useDispatch();
 
   const handleOnClick = (data) => {
-    dispatch(toggledCarIndex(data));
+    dispatch(showCarIndexSet(data));
   };
 
   return (
@@ -32,7 +32,7 @@ export default function CarHorizontalList() {
             src={`/images/${image?.image}.jpg`}
             style={{
               borderRadius: 10,
-              border: carIndex === image?.image ? "3px double #32a1ce" : "none",
+              border: showCarIndex === image?.image ? "3px double #32a1ce" : "none",
               width: 300,
             }}
           />

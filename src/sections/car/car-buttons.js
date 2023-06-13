@@ -22,13 +22,11 @@ import { useState } from "react";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import ExpandLessRoundedIcon from "@mui/icons-material/ExpandLessRounded";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
-import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import Fab from "../../components/button/fab";
 import {
   toggledCarStatus,
-  toggledCarTabIndex,
   toggledInteriorCarStatus,
   carHotSpotEnableSet,
 } from "../../redux/car-slice";

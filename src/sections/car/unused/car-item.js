@@ -2,27 +2,27 @@ import React from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import ShowWindowDimensions from "../../../utils/resize";
-import { toggledCarIndex } from "../../../redux/car-slice";
+import { showCarIndexSet } from "../../../redux/car-slice";
 
 const CarItem = () => {
   //Selector
-  const { carIndex } = useSelector((state) => state.car);
+  const { showCarIndex } = useSelector((state) => state.car);
   const cars = useSelector((state) => state.car?.car);
 
   const { width, height } = ShowWindowDimensions();
   const dispatch = useDispatch();
 
   const handleClick = (num) => {
-    const data = carIndex + num;
+    const data = showCarIndex + num;
     if (data === 0) return;
     else if (data === cars?.length) return;
-    else dispatch(toggledCarIndex(data));
+    else dispatch(showCarIndexSet(data));
   };
 
   return (
     <>
       {/* <IconButton
-        disabled={carIndex === 1}
+        disabled={showCarIndex === 1}
         edge="end"
         sx={{ position: "absolute", top: "50%", left: 0, color: "white" }}
         onClick={() => handleClick(-1)}
@@ -32,7 +32,7 @@ const CarItem = () => {
       <Image
         alt="image"
         priority
-        src={`images/${carIndex}.jpg`}
+        src={`images/${showCarIndex}.jpg`}
         style={{
           objectFit: "contain",
           height: "auto",
@@ -44,7 +44,7 @@ const CarItem = () => {
         height={height}
       />
       {/* <IconButton
-        disabled={carIndex === cars?.length}
+        disabled={showCarIndex === cars?.length}
         edge="start"
         sx={{
           position: "absolute",

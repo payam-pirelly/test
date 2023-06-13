@@ -3,7 +3,7 @@ import { carData } from "../utils/carData";
 
 const initialState = {
   cars: carData,
-  carIndex: 1,
+  showCarIndex: undefined,
   carStatus: "main",
   fullScreen: false,
   carHotSpotEnable: false,
@@ -23,8 +23,8 @@ const carSlice = createSlice({
   name: "car",
   initialState,
   reducers: {
-    toggledCarIndex: (state, action) => {
-      state.carIndex = action.payload;
+    showCarIndexSet: (state, action) => {
+      state.showCarIndex = action.payload;
     },
     toggledCarStatus: (state, action) => {
       state.carStatus = action.payload;
@@ -98,7 +98,7 @@ const carSlice = createSlice({
 
 export default carSlice.reducer;
 export const {
-  toggledCarIndex,
+  showCarIndexSet,
   toggledFullScreen,
   toggledCarStatus,
   carHotSpotEnableSet,

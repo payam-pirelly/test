@@ -5,7 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggledCarTabIndex } from "../../redux/car-slice";
 import Exterior360 from "./exterior-360";
 import Interior360 from "./interior-360";
-import CarsList from "./cars-list";
+import { isMobile } from "react-device-detect";
+import FullScreenDialog from "../../components/dialog/dialog";
+import Gallery from "./gallery";
 
 export default function CarOut() {
   const { carTabIndex } = useSelector((state) => state.car);
@@ -22,7 +24,7 @@ export default function CarOut() {
       case 1:
         return <Interior360 />;
       case 2:
-        return <CarsList />;
+        return <Gallery />;
       case 3:
         return 4;
       default:
@@ -34,6 +36,7 @@ export default function CarOut() {
     <>
       {renderContent}
       <CarButtons value={carTabIndex} handleTabChange={handleChange} />
+      {isMobile && <FullScreenDialog />}
     </>
   );
 }

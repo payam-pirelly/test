@@ -4,43 +4,29 @@ import {
   Card,
   CardHeader,
   CardMedia,
-  Fab,
   IconButton,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
-import { useMemo } from "react";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { toggledCarIndex } from "../../redux/car-slice";
+import { showCarIndexSet } from "../../redux/car-slice";
+import Fab from "../../components/button/fab";
 
-export default function GalleryCarItem({ open, onClose }) {
-  const { carIndex } = useSelector((state) => state.car);
+export default function GalleryItem() {
+  const { showCarIndex } = useSelector((state) => state.car);
   const dispatch = useDispatch();
 
   const handleClick = (num) => {
-    let value = carIndex;
+    let value = showCarIndex;
     value += num;
-    dispatch(toggledCarIndex(value));
+    dispatch(showCarIndexSet(value));
   };
-
-  const image = useMemo(
-    () => (
-      <>
-        <IconButton sx={{ position: "absolute", right: 0, top: 0 }}>
-          <div>salam</div>
-        </IconButton>
-      </>
-    ),
-    [carIndex]
-  );
-
-  const src = `images/${carIndex}.jpg`;
 
   return (
     <Backdrop
       sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      open={open}
+      open={Boolean(showCarIndex)}
     >
       <IconButton
         edge="end"
@@ -51,26 +37,21 @@ export default function GalleryCarItem({ open, onClose }) {
       </IconButton>
       <Card sx={{ width: "50%", background: "transparent" }}>
         <CardHeader
+          sx={{
+            marginBottom: (theme) => theme.spacing(-7),
+          }}
           action={
             <Fab
-              sx={{
-                background: (theme) => theme.palette.secondary.light,
-                "&:hover": {
-                  backgroundColor: (theme) => theme.palette.secondary.darkest,
-                },
-                color: "white",
-                marginBottom: "-7rem",
-              }}
-              onClick={onClose}
-            >
-              <CloseRoundedIcon />
-            </Fab>
+              color={"primary"}
+              icon={<CloseRoundedIcon />}
+              onClick={() => dispatch(showCarIndexSet(undefined))}
+            />
           }
         />
         <CardMedia
           sx={{ margin: "auto", width: "100%", borderRadius: 1 }}
           component="img"
-          image={carIndex}
+          image={showCarIndex}
           alt="Paella dish"
         />
       </Card>

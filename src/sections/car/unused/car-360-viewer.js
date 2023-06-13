@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, Tooltip, IconButton } from "@mui/material";
 import HotspotPointerIcon from "../../../components/icon/hotspot-pointer-icon";
 import ShowWindowDimensions from "../../../utils/resize";
-import { toggledCarIndex } from "../../../redux/car-slice";
+import { showCarIndexSet } from "../../../redux/car-slice";
 
 const Car360Viewer = () => {
   //Selector
@@ -44,7 +44,7 @@ const Car360Viewer = () => {
   }, []);
 
   const handleOnClick = (data) => {
-    dispatch(toggledCarIndex(data));
+    dispatch(showCarIndexSet(data));
   };
 
   return (

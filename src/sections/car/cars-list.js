@@ -10,9 +10,8 @@ import {
   IconButton,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
-import CarItem from "./gallery-car-Item";
 import { useState } from "react";
-import { toggledCarIndex, toggledCarTabIndex } from "../../redux/car-slice";
+import { showCarIndexSet, toggledCarTabIndex } from "../../redux/car-slice";
 import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 
 function TabPanel(props) {
@@ -80,8 +79,9 @@ export default function CarsList() {
         <ImageList cols={4}>
           {itemData.map((item) => (
             <Button
+              key={item?.toString()}
               onClick={() => {
-                dispatch(toggledCarIndex(item.img));
+                dispatch(showCarIndexSet(item.img));
                 setOpen(true);
               }}
             >
@@ -101,20 +101,26 @@ export default function CarsList() {
       <TabPanel value={value} index={1}>
         <ImageList cols={4}>
           {itemData1.map((item) => (
-            <ImageListItem key={item.img}>
-              <img
-                style={{ borderRadius: 10 }}
-                src={`${item.img}`}
-                srcSet={`${item.img}`}
-                alt={item.title}
-                loading="lazy"
-              />
-            </ImageListItem>
+            <Button
+              key={item?.toString()}
+              onClick={() => {
+                dispatch(showCarIndexSet(item.img));
+                setOpen(true);
+              }}
+            >
+              <ImageListItem key={item.img}>
+                <img
+                  style={{ borderRadius: 10 }}
+                  src={`${item.img}`}
+                  srcSet={`${item.img}`}
+                  alt={item.title}
+                  loading="lazy"
+                />
+              </ImageListItem>
+            </Button>
           ))}
         </ImageList>
       </TabPanel>
-
-      <CarItem open={open} onClose={() => setOpen(false)} />
     </>
   );
 }

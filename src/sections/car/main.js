@@ -2,9 +2,10 @@ import { Card, CardContent, Grid, IconButton } from "@mui/material";
 import React from "react";
 import { Box, Container as MUIContainer } from "@mui/system";
 import { useDispatch } from "react-redux";
-import CarVerticalList from "./car-vertical-list";
+import VerticalList from "./vertical-list";
 import { toggledCarStatus } from "../../redux/car-slice";
 import ShowWindowDimensions from "../../utils/resize";
+import { useWidth } from "../../utils/useWidth";
 
 const imagePath = "https://fastly-production.24c.in/webin/360/output_1.jpeg";
 
@@ -17,11 +18,42 @@ export default function Main({ onClick }) {
     onClick();
   };
 
+  const currentBreakpoint = useWidth();
+
+  const handleBreakPoint = () => {
+    switch (currentBreakpoint) {
+      case "xl":
+        return 8;
+      case "lg":
+        return 8;
+      case "md":
+        return 12;
+      case "sm":
+        return 12;
+      case "xs":
+        return 12;
+      default:
+        break;
+    }
+  };
+
+  // useEffect(() => {
+  //   const query = ref(db, "Tests");
+  //   return onValue(query, (snapshot) => {
+  //     const data = snapshot.val();
+  //     if (snapshot.exists()) {
+  //       Object.values(data).map((project) => {
+  //         setProjects((projects) => [...projects, project]);
+  //       });
+  //     }
+  //   });
+  // }, []);
+
   return (
     <Box display={"flex"} alignItems={"center"} overflow={"hidden"}>
       <MUIContainer maxWidth={"100%"}>
         <Grid container justifyContent={"center"}>
-          <Grid item xs={8}>
+          <Grid item xs={handleBreakPoint()}>
             <Card sx={{ boxShadow: "none" }}>
               <Box
                 sx={{
@@ -49,7 +81,7 @@ export default function Main({ onClick }) {
                 </Box>
               </Box>
               <CardContent sx={{ padding: 0 }}>
-                <CarVerticalList onClick={onClick} />
+                <VerticalList onClick={onClick} />
               </CardContent>
             </Card>
           </Grid>
