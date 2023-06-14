@@ -6,11 +6,11 @@ import { toggledCarTabIndex } from "../../redux/car-slice";
 import Exterior360 from "./exterior-360";
 import Interior360 from "./interior-360";
 import { isMobile } from "react-device-detect";
-import FullScreenDialog from "../../components/dialog/dialog";
 import Gallery from "./gallery";
+import FullScreenDialog from "../../components/dialog/full-screen-dialog";
 
 export default function CarOut() {
-  const { carTabIndex } = useSelector((state) => state.car);
+  const { carTabIndex, showCarItem } = useSelector((state) => state.car);
   const dispatch = useDispatch();
 
   const handleChange = (event, newValue) => {
@@ -32,11 +32,16 @@ export default function CarOut() {
     }
   }, [carTabIndex]);
 
+  const handleOpenDialog = useMemo(() => {
+    if (carTabIndex === 2 && !Boolean(showCarItem)) return true;
+    else return false;
+  }, [showCarItem, carTabIndex]);
+
   return (
     <>
       {renderContent}
       <CarButtons value={carTabIndex} handleTabChange={handleChange} />
-      {isMobile && <FullScreenDialog />}
+      {isMobile && <FullScreenDialog open={handleOpenDialog} />}
     </>
   );
 }

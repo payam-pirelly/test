@@ -21,7 +21,6 @@ import RightIcon from "../../components/icon/right-icon";
 export default function HotspotCard({ onClose, closePosition }) {
   const {
     firstHotSpotPosition,
-    secondHotSpotPosition,
     carHotSpotPositions,
     currentCarHotSpotIndex,
     carHotSpotReload,

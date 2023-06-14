@@ -5,7 +5,7 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
   palette: {
     primary: {
-      lightest: "#F5F7FF",
+      lightest: "#C2C0BF",
       light: "#D4D4D5",
       main: "#E1F0FF",
       dark: "#E1F0FF", //hover

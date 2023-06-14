@@ -20,6 +20,7 @@ import {
   toggledSecondHotSpotPosition,
 } from "../../redux/car-slice";
 import HotspotDetail from "./hotspot-detail";
+import { isMobile } from "react-device-detect";
 
 const LeftButtons = styled("div")(({}) => ({
   top: "50%",
@@ -140,10 +141,12 @@ class React360Viewer extends Component {
       "v360-viewport-container"
     )[0];
     this.fetchData();
+    if (isMobile) return;
     document.body.style.cursor = `url('data:image/svg+xml;base64,${Mouse.pointImage64}'),auto`;
   }
 
   componentWillUnmount() {
+    if (isMobile) return;
     document.body.style.cursor = "default";
   }
 
@@ -329,6 +332,7 @@ class React360Viewer extends Component {
       //redraw();
       this.redraw();
     }
+    this.doMoving;
   };
 
   stopDragging = (evt) => {
@@ -582,6 +586,15 @@ class React360Viewer extends Component {
   };
 
   zoom(zoom) {
+    if (zoom === 100) {
+      if (this.currentScale === 2) return;
+      zoom = 1;
+    } else if (zoom === -100) {
+      if (this.currentScale === 1) return;
+      zoom = -1;
+    }
+    // else if (this.currentScale > 2) zoom = 2;
+    // else if (this.curren) zoom = 2;
     this.setState({ currentScale: (this.currentScale += zoom) });
     if (this.currentScale === 1) {
       this.setState({ ...this.state, x: 0, y: 0, currentScale: 1 });
@@ -660,6 +673,7 @@ class React360Viewer extends Component {
     this.movement = true;
     this.movementStart = evt.pageX;
     // this.viewPortElementRef.style.cursor = "grabbing";
+    if (isMobile) return;
     document.body.style.cursor = `url('data:image/svg+xml;base64,${Mouse.dragImage64}'),auto`;
   };
 
@@ -752,6 +766,7 @@ class React360Viewer extends Component {
     this.movement = false;
     this.movementStart = 0;
     // this.viewPortElementRef.style.cursor = "grab";
+    if (isMobile) return;
     document.body.style.cursor = `url('data:image/svg+xml;base64,${Mouse.pointImage64}'),auto`;
   };
 
@@ -864,9 +879,10 @@ class React360Viewer extends Component {
       <div
         style={{
           width: this.props?.width,
+          height: this.props?.height,
         }}
         ref={(inputEl) => (this.viewerContainerRef = inputEl)}
-        // onWheel={(e) => this.zoomImage(e)}
+        onWheel={(e) => this.zoomImage(e)}
       >
         {!this.state.imagesLoaded ? (
           <p ref={this.viewPercentageRef}>loading...</p>
@@ -943,20 +959,22 @@ class React360Viewer extends Component {
             {this.props.boxShadow ? <Shadow /> : ""}
           </V360>
         </Hammer>
-        <LeftButtons>
-          <Fab
-            color={"primary"}
-            icon={<AddRoundedIcon color="secondary" />}
-            onClick={this.zoomIn}
-            disabled={this.currentScale > 2 ? true : false}
-          />
-          <Fab
-            color={"primary"}
-            icon={<RemoveRoundedIcon color="secondary" />}
-            onClick={this.zoomOut}
-            disabled={this.currentScale === 1 ? true : false}
-          />
-        </LeftButtons>
+        {!isMobile && (
+          <LeftButtons>
+            <Fab
+              color={"primary"}
+              icon={<AddRoundedIcon color="secondary" />}
+              onClick={this.zoomIn}
+              disabled={this.currentScale > 2 ? true : false}
+            />
+            <Fab
+              color={"primary"}
+              icon={<RemoveRoundedIcon color="secondary" />}
+              onClick={this.zoomOut}
+              disabled={this.currentScale === 1 ? true : false}
+            />
+          </LeftButtons>
+        )}
         <HotspotDetail />
       </div>
     );

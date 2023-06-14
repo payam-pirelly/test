@@ -32,19 +32,29 @@ import {
 } from "../../redux/car-slice";
 import { exitFullscreen } from "../../utils/fullscreen";
 import HotspotIcon from "../../components/icon/hotspot-icon";
-import IconLabelButton from "../../components/button/Icon-label-button";
-import CancelIcon from "../../components/icon/cancel-icon";
 import WarrantyIcon from "../../components/icon/warranty-icon";
-import OverviewIcon from "../../components/icon/overview-icon";
 import CardHistory from "../../components/card/card-history";
 import CardWarranty from "../../components/card/card-warranty";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import HistoryIcon from "../../components/icon/history-icon";
+import { isMobile } from "react-device-detect";
+import SettingIcon from "../../components/icon/setting-icon.js";
 
-const RightButtons = styled("div")(({}) => ({
+const WebFeature = styled("div")(({}) => ({
   top: "8rem",
   display: "flex",
   flexDirection: "column",
   position: "absolute",
   right: "2rem",
+  justifyContent: "space-around",
+}));
+
+const MobileFeature = styled("div")(({}) => ({
+  top: "4rem",
+  display: "flex",
+  flexDirection: "column",
+  position: "absolute",
+  left: "0rem",
   justifyContent: "space-around",
 }));
 
@@ -78,6 +88,7 @@ const CarButtons = ({ value, handleTabChange }) => {
   const dispatch = useDispatch();
 
   const [checked, setChecked] = useState(false);
+  const [mobileFeatureChecked, setMobileFeatureChecked] = useState(false);
   const { carTabIndex, carHotSpotEnable } = useSelector((state) => state.car);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
@@ -89,6 +100,10 @@ const CarButtons = ({ value, handleTabChange }) => {
 
   const handleChange = () => {
     setChecked((prev) => !prev);
+  };
+
+  const handleChangeMobileFeature = () => {
+    setMobileFeatureChecked((prev) => !prev);
   };
 
   const handleClose = () => {
@@ -127,26 +142,25 @@ const CarButtons = ({ value, handleTabChange }) => {
           <Box
             sx={{
               display: "flex",
-              borderRadius: (theme) => theme.spacing(1),
-              height: "2rem",
-              width: "10rem",
+              borderRadius: (theme) => theme.spacing(2),
+              height: "2.938rem",
+              width: "10.875rem",
               alignItems: "center",
               background: (theme) =>
                 carTabIndex === 0
                   ? theme.palette.primary.main
                   : theme.palette.primary.darkest,
               opacity: 0.9,
-              justifyContent: "space-around",
+              justifyContent: "space-evenly",
             }}
           >
             <HotspotIcon
               style={{
-                margin: "0 6px",
                 fontSize: "small",
                 fill: "red",
               }}
             />
-            <Typography color={theme.palette.secondary.main}>
+            <Typography color={theme.palette.secondary.main} ml={-1}>
               Hotspot
             </Typography>
             <Switch
@@ -157,34 +171,116 @@ const CarButtons = ({ value, handleTabChange }) => {
             />
           </Box>
           {carTabIndex !== 1 && (
-            <Box
-              onMouseEnter={() => setOpen(true)}
-              onMouseLeave={() => setOpen(false)}
-              component={"div"}
-              sx={{
-                opacity: 0.9,
-                display: "flex",
-                alignItems: "center",
-                background: open
-                  ? (theme) => theme.palette.primary.main
-                  : "transparent",
-                borderRadius: (theme) => theme.spacing(1),
-                height: "2rem",
-                marginTop: 1,
-              }}
-              onMouseOut={() => setOpen(false)}
-            >
-              <IconLabelButton icon={<InfoOutlinedIcon />} title="info" />
-              {open && (
-                <Typography
-                  sx={{ fontWeight: "bold" }}
-                  color={theme.palette.secondary.main}
-                  mr={1}
+            <>
+              {isMobile ? (
+                <>
+                  <MobileFeature>
+                    <Fab
+                      color={"primary"}
+                      icon={
+                        !mobileFeatureChecked ? (
+                          <SettingIcon fontSize="small" />
+                        ) : (
+                          <CloseRoundedIcon color="secondary" />
+                        )
+                      }
+                      onClick={handleChangeMobileFeature}
+                    />
+                    <Fade in={mobileFeatureChecked}>
+                      <Box>
+                        <Box
+                          display={"block"}
+                          sx={{
+                            position: "absolute",
+                            left: "3rem",
+                            top: "1rem",
+                          }}
+                        >
+                          <Fab
+                            color={"primary"}
+                            icon={<WarrantyIcon color="secondary" />}
+                            onClick={() => setOpenWarranty(true)}
+                          />
+                          <Typography
+                            sx={{ color: "black", fontSize: "xx-small", mt: 1 }}
+                            variant="caption"
+                            display="block"
+                            gutterBottom
+                          >
+                            warranty
+                          </Typography>
+                        </Box>
+                        <Box display={"block"} mt={1.5}>
+                          <Fab
+                            color={"primary"}
+                            icon={<HistoryIcon color="secondary" />}
+                            onClick={() => setOpenHistory(true)}
+                          />
+                          <Typography
+                            sx={{ color: "black", fontSize: "xx-small", mt: 1 }}
+                            variant="caption"
+                            display="block"
+                            gutterBottom
+                          >
+                            HISTORY
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Fade>
+                  </MobileFeature>
+                </>
+              ) : (
+                <Box
+                  Box
+                  sx={{ mt: 1 }}
+                  onMouseEnter={() => setOpen(true)}
+                  onMouseLeave={() => setOpen(false)}
                 >
-                  2018 ford
-                </Typography>
+                  {!open ? (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        height: "2.938rem",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        ml: 2,
+                      }}
+                    >
+                      <InfoOutlinedIcon color="secondary" fontSize="small" />
+                      <Typography color={theme.palette.secondary.main} ml={1}>
+                        Info
+                      </Typography>
+                    </Box>
+                  ) : (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        borderRadius: (theme) => theme.spacing(2),
+                        height: "2.938rem",
+                        width: "auto",
+                        alignItems: "center",
+                        background: (theme) => theme.palette.primary.main,
+                        opacity: 0.9,
+                        justifyContent: "space-evenly",
+                      }}
+                    >
+                      <Box display={"flex"} alignItems={"center"}>
+                        <InfoOutlinedIcon color="secondary" fontSize="small" />
+                        <Typography color={theme.palette.secondary.main} ml={1}>
+                          Info
+                        </Typography>
+                      </Box>
+                      <Typography
+                        color={theme.palette.secondary.main}
+                        fontWeight={600}
+                      >
+                        ford 2017
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
               )}
-            </Box>
+            </>
           )}
         </>
       )}
@@ -200,57 +296,59 @@ const CarButtons = ({ value, handleTabChange }) => {
           right: "2rem",
         }}
       >
-        <IconButton onClick={handleClose} aria-label="close">
-          <CancelIcon fontSize="large" />
+        <IconButton onClick={handleClose}>
+          <CloseRoundedIcon />
         </IconButton>
       </Box>
-      <RightButtons>
-        <Fab
-          color={"primary"}
-          icon={
-            checked ? (
-              <ExpandMoreRoundedIcon color="secondary" />
-            ) : (
-              <ExpandLessRoundedIcon color="secondary" />
-            )
-          }
-          onClick={handleChange}
-        />
-        <Fade in={checked}>
-          <Box my={1}>
-            <Box display={"block"}>
-              <Fab
-                color={"primary"}
-                icon={<WarrantyIcon color="secondary" />}
-                onClick={() => setOpenWarranty(true)}
-              />
-              <Typography
-                sx={{ color: "black", fontSize: "xx-small" }}
-                variant="caption"
-                display="block"
-                gutterBottom
-              >
-                warranty
-              </Typography>
+      {!isMobile && (
+        <WebFeature>
+          <Fab
+            color={"primary"}
+            icon={
+              !checked ? (
+                <ExpandMoreRoundedIcon color="secondary" />
+              ) : (
+                <ExpandLessRoundedIcon color="secondary" />
+              )
+            }
+            onClick={handleChange}
+          />
+          <Fade in={checked}>
+            <Box>
+              <Box display={"block"} my={3}>
+                <Fab
+                  color={"primary"}
+                  icon={<WarrantyIcon color="secondary" />}
+                  onClick={() => setOpenWarranty(true)}
+                />
+                <Typography
+                  sx={{ color: "black", fontSize: "xx-small", mt: 1 }}
+                  variant="caption"
+                  display="block"
+                  gutterBottom
+                >
+                  warranty
+                </Typography>
+              </Box>
+              <Box display={"block"}>
+                <Fab
+                  color={"primary"}
+                  icon={<HistoryIcon color="secondary" />}
+                  onClick={() => setOpenHistory(true)}
+                />
+                <Typography
+                  sx={{ color: "black", fontSize: "xx-small", mt: 1 }}
+                  variant="caption"
+                  display="block"
+                  gutterBottom
+                >
+                  HISTORY
+                </Typography>
+              </Box>
             </Box>
-            <Box display={"block"}>
-              <Fab
-                color={"primary"}
-                icon={<OverviewIcon color="secondary" />}
-                onClick={() => setOpenHistory(true)}
-              />
-              <Typography
-                sx={{ color: "black", fontSize: "xx-small" }}
-                variant="caption"
-                display="block"
-                gutterBottom
-              >
-                HISTORY
-              </Typography>
-            </Box>
-          </Box>
-        </Fade>
-      </RightButtons>
+          </Fade>
+        </WebFeature>
+      )}
     </>
   );
 

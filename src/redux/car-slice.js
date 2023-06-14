@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { carData } from "../utils/carData";
+import { carData, gallery } from "../utils/carData";
 
 const initialState = {
   cars: carData,
-  showCarIndex: undefined,
+  gallery: gallery,
+  showCarItem: undefined,
   carStatus: "main",
   fullScreen: false,
   carHotSpotEnable: false,
@@ -23,8 +24,8 @@ const carSlice = createSlice({
   name: "car",
   initialState,
   reducers: {
-    showCarIndexSet: (state, action) => {
-      state.showCarIndex = action.payload;
+    showCarItemSet: (state, action) => {
+      state.showCarItem = action.payload;
     },
     toggledCarStatus: (state, action) => {
       state.carStatus = action.payload;
@@ -98,7 +99,7 @@ const carSlice = createSlice({
 
 export default carSlice.reducer;
 export const {
-  showCarIndexSet,
+  showCarItemSet,
   toggledFullScreen,
   toggledCarStatus,
   carHotSpotEnableSet,

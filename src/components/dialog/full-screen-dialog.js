@@ -9,7 +9,7 @@ import ArrowBackRoundedIcon from "@mui/icons-material/ArrowBackRounded";
 import { Box, ImageList, ImageListItem, Tab, Tabs } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import { showCarIndexSet, toggledCarTabIndex } from "../../redux/car-slice";
+import { showCarItemSet, toggledCarTabIndex } from "../../redux/car-slice";
 import ShowWindowDimensions from "../../utils/resize";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -45,11 +45,11 @@ function a11yProps(index) {
   };
 }
 
-export default function FullScreenDialog() {
-  const { carTabIndex } = useSelector((state) => state.car);
+export default function FullScreenDialog({ open }) {
   const [value, setValue] = React.useState(0);
   const dispatch = useDispatch();
   const { width, height } = ShowWindowDimensions();
+  const { gallery } = useSelector((state) => state.car);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -57,11 +57,7 @@ export default function FullScreenDialog() {
 
   return (
     <>
-      <Dialog
-        fullScreen
-        open={carTabIndex === 2}
-        TransitionComponent={Transition}
-      >
+      <Dialog fullScreen open={open} TransitionComponent={Transition}>
         <AppBar
           position="fixed"
           sx={{ background: "white", boxShadow: "none" }}
@@ -98,8 +94,11 @@ export default function FullScreenDialog() {
         </AppBar>
         <TabPanel value={value} index={0}>
           <ImageList cols={1}>
-            {itemData.map((item) => (
-              <Button onClick={() => dispatch(showCarIndexSet(item.img))}>
+            {gallery.map((item) => (
+              <Button
+                key={item.img}
+                onClick={() => dispatch(showCarItemSet(item.img))}
+              >
                 <ImageListItem key={item.img}>
                   <img
                     width={width}
@@ -120,10 +119,11 @@ export default function FullScreenDialog() {
         </TabPanel>
         <TabPanel value={value} index={1}>
           <ImageList cols={1}>
-            {itemData1.map((item) => (
+            {gallery.map((item) => (
               <Button
+                key={item.img}
                 onClick={() => {
-                  dispatch(showCarIndexSet(item.img));
+                  dispatch(showCarItemSet(item.img));
                 }}
               >
                 <ImageListItem key={item.img}>
@@ -148,105 +148,3 @@ export default function FullScreenDialog() {
     </>
   );
 }
-
-const itemData1 = [
-  {
-    img: "images/10.jpg",
-    title: "Breakfast",
-  },
-  {
-    img: "images/11.jpg",
-    title: "Burger",
-  },
-  {
-    img: "images/12.jpg",
-    title: "Camera",
-  },
-  {
-    img: "images/13.jpg",
-    title: "Coffee",
-  },
-  {
-    img: "images/14.jpg",
-    title: "Hats",
-  },
-  {
-    img: "images/15.jpg",
-    title: "Honey",
-  },
-  {
-    img: "images/16.jpg",
-    title: "Basketball",
-  },
-  {
-    img: "images/17.jpg",
-    title: "Fern",
-  },
-  {
-    img: "images/18.jpg",
-    title: "Mushrooms",
-  },
-  {
-    img: "images/19.jpg",
-    title: "Tomato basil",
-  },
-  {
-    img: "images/20.jpg",
-    title: "Sea star",
-  },
-  {
-    img: "images/21.jpg",
-    title: "Bike",
-  },
-];
-
-const itemData = [
-  {
-    img: "images/1.jpg",
-    title: "Breakfast",
-  },
-  {
-    img: "images/2.jpg",
-    title: "Burger",
-  },
-  {
-    img: "images/3.jpg",
-    title: "Camera",
-  },
-  {
-    img: "images/4.jpg",
-    title: "Coffee",
-  },
-  {
-    img: "images/5.jpg",
-    title: "Hats",
-  },
-  {
-    img: "images/6.jpg",
-    title: "Honey",
-  },
-  {
-    img: "images/7.jpg",
-    title: "Basketball",
-  },
-  {
-    img: "images/8.jpg",
-    title: "Fern",
-  },
-  {
-    img: "images/9.jpg",
-    title: "Mushrooms",
-  },
-  {
-    img: "images/10.jpg",
-    title: "Tomato basil",
-  },
-  {
-    img: "images/11.jpg",
-    title: "Sea star",
-  },
-  {
-    img: "images/12.jpg",
-    title: "Bike",
-  },
-];

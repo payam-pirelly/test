@@ -51,3 +51,54 @@ export const carData = [
   { image: 49, x: 50, y: 50, title: "the hood" },
   { image: 50, x: 60, y: 50, title: "the hood" },
 ];
+
+export const gallery = [
+  {
+    img: "images/1.jpg",
+    title: "Breakfast",
+  },
+  {
+    img: "images/2.jpg",
+    title: "Burger",
+  },
+  {
+    img: "images/3.jpg",
+    title: "Camera",
+  },
+  {
+    img: "images/4.jpg",
+    title: "Coffee",
+  },
+  {
+    img: "images/5.jpg",
+    title: "Hats",
+  },
+  {
+    img: "images/6.jpg",
+    title: "Honey",
+  },
+  {
+    img: "images/7.jpg",
+    title: "Basketball",
+  },
+  {
+    img: "images/8.jpg",
+    title: "Fern",
+  },
+  {
+    img: "images/9.jpg",
+    title: "Mushrooms",
+  },
+  {
+    img: "images/10.jpg",
+    title: "Tomato basil",
+  },
+  {
+    img: "images/11.jpg",
+    title: "Sea star",
+  },
+  {
+    img: "images/12.jpg",
+    title: "Bike",
+  },
+];
