@@ -26,4 +26,10 @@ const theme = createTheme({
   },
 });
 
+theme.typography.h6 = {
+  [theme.breakpoints.up("xs")]: {
+    // fontSize: "1rem",
+  },
+};
+
 export default theme;

@@ -8,6 +8,8 @@ import CarOut from "./car-out";
 import { toggledFullScreen } from "../../redux/car-slice";
 import ShowWindowDimensions from "../../utils/resize";
 import { enterFullScreen } from "../../utils/fullscreen";
+import { isMobile } from "react-device-detect";
+import MobileMain from "./mobile-main";
 
 export default function Container() {
   const { carStatus } = useSelector((state) => state.car);
@@ -23,6 +25,7 @@ export default function Container() {
   const renderContent = useMemo(() => {
     switch (carStatus) {
       case "main":
+        if (isMobile) return <MobileMain onClick={handleOnClick} />;
         return <Main onClick={handleOnClick} />;
       case "carOut":
         return <CarOut />;

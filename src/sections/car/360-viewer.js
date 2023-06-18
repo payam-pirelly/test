@@ -879,7 +879,7 @@ class React360Viewer extends Component {
       <div
         style={{
           width: this.props?.width,
-          height: this.props?.height,
+          height: "auto",
         }}
         ref={(inputEl) => (this.viewerContainerRef = inputEl)}
         onWheel={(e) => this.zoomImage(e)}

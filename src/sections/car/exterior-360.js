@@ -7,13 +7,12 @@ const basePath = "https://fastly-production.24c.in/webin/360";
 export default function Exterior360() {
   const { carHotSpotEnable } = useSelector((state) => state.car);
 
-  const { width, height } = ShowWindowDimensions();
+  const { width } = ShowWindowDimensions();
 
   return (
     <React360Viewer
       width={width}
-      height={height}
-      amount={75}
+      amount={1}
       imagePath={basePath}
       fileName="output_{index}.jpeg"
       boxShadow

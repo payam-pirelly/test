@@ -10,11 +10,22 @@ import * as React from "react";
 import { useDispatch } from "react-redux";
 import { toggledCarStatus, toggledCarTabIndex } from "../../redux/car-slice";
 import ShowWindowDimensions from "../../utils/resize";
+import { isMobile } from "react-device-detect";
 
 const imagePath = "https://fastly-production.24c.in/webin/360/output_1.jpeg";
 
+var myArr = Array(isMobile ? 3 : 4)
+  .join()
+  .split(",")
+  .map(
+    function (a) {
+      return this.i++;
+    },
+    { i: 1 }
+  );
+
 export default function VerticalList({ onClick }) {
-  const items = [1, 2, 3, 4];
+  const items = myArr;
   const dispatch = useDispatch();
   const { width } = ShowWindowDimensions();
 
